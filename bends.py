@@ -109,7 +109,7 @@ def find_intersections(walks):
 def validate_intersections(intersections):
     if len(intersections[1]) != len(intersections[0]):
         return False
-    return len(intersections[0] % 2 != 0)
+    return len(intersections[0]) % 2 != 0
 
 test_walk = np.array([[ 0,  0,  0,  1,  1,  1,  1,  0, -1, -1, -1, -2, -2, -2, -2, -2,
         -1,  0,  0,  1,  2,  2,  3,  4,  4,  3,  3,  4,  4,  5,  5,  6,
@@ -140,6 +140,18 @@ def create_intersection_pairings(w1_ints, w2_ints):
     n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)//2))]
     # generate all possible combinations
     # now we add to the list of maps based on the bitstrings
+    all_intersections = []
+    for bitstring in n_bitstrings:
+        one_intersection = dict()
+        for idx, bit in enumerate(bitstring):
+            # NOT SURE IF THESE ARE THE CORRECT PAIRINGS
+            one_intersection[w1_ints[idx]] = bit == '0'
+            one_intersection[w2_ints[idx]] = bit == '0'
+        all_intersections.append(one_intersection)
+    return all_intersections
+
+                
+
 
 if __name__ == "__main__":
     walk = gen_random_walk()
@@ -147,8 +159,9 @@ if __name__ == "__main__":
     a_walk = gen_ab(walk)
     g_walk = gen_gamma(walk)
     walks_ab = [walk, a_walk]
-    print(find_intersections(walks_ab))
-    print(find_intersections(reversed(walks_ab)))
+    ints_1 = find_intersections(walks_ab)
+    ints_2 = find_intersections(reversed(walks_ab))
+    print(create_intersection_pairings(ints_1, ints_2))
     print('start a', (walks_ab[0][0][0], walks_ab[0][1][0]), 'start b', (walks_ab[1][0][0], walks_ab[1][1][0]))
     # plot_walk(walks_ab)
     # walks_g = [walk, g_walk]
