@@ -133,7 +133,7 @@ def gen_random_walk():
     return gen_random_walk()
 
 # returns a list of 
-def create_intersection_pairings(w1_ints, w2_ints):
+def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
     if validate_intersections([w1_ints, w2_ints]):
         return None
     # we know from validate_intersections w1, w2 ints must be even
@@ -146,7 +146,10 @@ def create_intersection_pairings(w1_ints, w2_ints):
         for idx, bit in enumerate(bitstring):
             # NOT SURE IF THESE ARE THE CORRECT PAIRINGS
             one_intersection[w1_ints[idx]] = bit == '0'
-            one_intersection[w2_ints[idx]] = bit == '0'
+            if alpha_or_gamma:
+                one_intersection[w2_ints[idx]] = bit != '0'
+            else:
+                one_intersection[w2_ints[idx]] = bit == '0'
         all_intersections.append(one_intersection)
     return all_intersections
 
@@ -161,7 +164,7 @@ if __name__ == "__main__":
     walks_ab = [walk, a_walk]
     ints_1 = find_intersections(walks_ab)
     ints_2 = find_intersections(reversed(walks_ab))
-    print(create_intersection_pairings(ints_1, ints_2))
+    print(create_intersection_pairings(ints_1, ints_2, False))
     print('start a', (walks_ab[0][0][0], walks_ab[0][1][0]), 'start b', (walks_ab[1][0][0], walks_ab[1][1][0]))
     # plot_walk(walks_ab)
     # walks_g = [walk, g_walk]
