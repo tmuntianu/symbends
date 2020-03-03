@@ -1,6 +1,7 @@
 from walks import plot_pivot, pivot, plot_dimer, is_saw
 import matplotlib.pyplot as plt
 import numpy as np
+import itertools
 
 def plot_walk(walks):
     plt.figure(figsize = (8, 8))
@@ -12,10 +13,7 @@ def plot_walk(walks):
     else:
         x, y = walk
         plt.plot(x, y, 'b.-', linewidth = 1)
-    plt.plot(0, 0, 'go', ms = 12, label = 'Start')
-    plt.plot(x[-1], y[-1], 'ro', ms = 12, label = 'End')
     plt.axis('equal')
-    plt.legend()
     plt.title('Walk', fontsize=14, fontweight='bold', y = 1.05)
     plt.show()
 
@@ -49,7 +47,7 @@ def gen_ab(walk):
     return [-np.array(walk[0]) + 1, -np.array(walk[1]) + 1]
 
 def gen_gamma(walk):
-    return [np.array(walk[1]) + 1, np.array(walk[0]) + 1]
+    return [np.array(walk[1]) + 1, np.array(walk[0]) - 1]
 
 def add_midpoints(walk):
     walk_x = []
@@ -105,9 +103,13 @@ def find_intersections(walks):
         coord = (w2[0][i], w2[1][i])
         if coord in all_pts:
             w2_ints.append(coord)
-    
     return w2_ints
 
+# makes sure there's an even number of intersections
+def validate_intersections(intersections):
+    if len(intersections[1]) != len(intersections[0]):
+        return False
+    return len(intersections[0] % 2 != 0)
 
 test_walk = np.array([[ 0,  0,  0,  1,  1,  1,  1,  0, -1, -1, -1, -2, -2, -2, -2, -2,
         -1,  0,  0,  1,  2,  2,  3,  4,  4,  3,  3,  4,  4,  5,  5,  6,
@@ -128,20 +130,28 @@ def gen_random_walk():
             # print('failed at de_pal')
         if (validity_check(walk)):
             return add_midpoints(walk)
-    
     return gen_random_walk()
 
-if __name__ == "__main__":
-    valid_walk = gen_random_walk()
-    plot_walk([valid_walk])    
+# returns a list of 
+def create_intersection_pairings(w1_ints, w2_ints):
+    if validate_intersections([w1_ints, w2_ints]):
+        return None
+    # we know from validate_intersections w1, w2 ints must be even
+    n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)//2))]
+    # generate all possible combinations
+    # now we add to the list of maps based on the bitstrings
 
-    # a_tst = gen_ab(tst)
-    # g_tst = gen_gamma(tst)
-    # walks_ab = [tst, a_tst]
-    # print(find_intersections(walks_ab))
-    # print(find_intersections(reversed(walks_ab)))
+if __name__ == "__main__":
+    walk = gen_random_walk()
+
+    a_walk = gen_ab(walk)
+    g_walk = gen_gamma(walk)
+    walks_ab = [walk, a_walk]
+    print(find_intersections(walks_ab))
+    print(find_intersections(reversed(walks_ab)))
+    print('start a', (walks_ab[0][0][0], walks_ab[0][1][0]), 'start b', (walks_ab[1][0][0], walks_ab[1][1][0]))
     # plot_walk(walks_ab)
-    # walks_g = [tst, g_tst]
-    # print(find_intersections(walks_g))
+    # walks_g = [walk, g_walk]
+    # find_intersections(walks_g)
     # print(find_intersections(reversed(walks_g)))
     # plot_walk(walks_g)
