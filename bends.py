@@ -151,8 +151,6 @@ def create_intersection_pairings(w1_ints, w2_ints):
     return all_intersections
 
 
-
-
 if __name__ == "__main__":
     walk = gen_random_walk()
 
