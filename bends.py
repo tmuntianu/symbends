@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import itertools
 
-def plot_walk(walks):
+def plot_walk(walks,title='Walk'):
     plt.figure(figsize = (8, 8))
     c = ['b','g', 'r', 'c', 'm', 'y', 'k']
     if isinstance(walks,list):
@@ -14,7 +14,7 @@ def plot_walk(walks):
         x, y = walk
         plt.plot(x, y, 'b.-', linewidth = 1)
     plt.axis('equal')
-    plt.title('Walk', fontsize=14, fontweight='bold', y = 1.05)
+    plt.title(title, fontsize=14, fontweight='bold', y = 1.05)
     plt.show()
 
 def de_palindrome(walk):
@@ -29,7 +29,7 @@ def de_palindrome(walk):
                 stack.pop()
             else:
                 droming = False
-        
+
         if not droming:
             stack.append(coord)
 
@@ -85,7 +85,7 @@ def validity_check(walk):
         if i > 0 and i < len(walk[0])-1:
             if pt == start_pt or pt == end_pt:
                 return False
-    
+
         traveled.add(pt)
 
     return True
@@ -120,7 +120,7 @@ test_walk = np.array([[ 0,  0,  0,  1,  1,  1,  1,  0, -1, -1, -1, -2, -2, -2, -
 
 def gen_random_walk():
     potential_walks = pivot(35, 20, 'dimer', 7)
-    
+
     for w in potential_walks:
         walk = np.array(w)
         try:
@@ -132,7 +132,7 @@ def gen_random_walk():
             return add_midpoints(walk)
     return gen_random_walk()
 
-# returns a list of 
+# returns a list of
 def create_intersection_pairings(w1_ints, w2_ints):
     if validate_intersections([w1_ints, w2_ints]):
         return None
@@ -150,7 +150,7 @@ def create_intersection_pairings(w1_ints, w2_ints):
         all_intersections.append(one_intersection)
     return all_intersections
 
-                
+
 
 
 if __name__ == "__main__":
@@ -167,4 +167,5 @@ if __name__ == "__main__":
     # walks_g = [walk, g_walk]
     # find_intersections(walks_g)
     # print(find_intersections(reversed(walks_g)))
-    # plot_walk(walks_g)
+    plot_walk(walks_ab,'alpha, beta')
+    plot_walk([walk, g_walk],'gamma')
