@@ -43,7 +43,7 @@ if __name__ == "__main__":
         ints = create_intersection_pairings(ints1, ints2, alpha_or_gamma=alpha_or_gamma)
         enablePrint()
         # print(ints)
-        # blockPrint()
+        blockPrint()
 
         if ints is None:
             continue
@@ -52,12 +52,16 @@ if __name__ == "__main__":
             try:
                 dt_code = create_dt(ints2, ints1, i)
             except:
+                enablePrint()
                 print('dt code failed')
+                blockPrint()
                 continue
             try:
                 gc = Knots().from_dowker_code(dt_code).gauss_code()[0]
             except:
+                enablePrint()
                 print('knot gen failed')
+                blockPrint()
                 continue
             gc_py = ''
             for i in gc:
@@ -72,7 +76,10 @@ if __name__ == "__main__":
             rep = GaussCode(gc_py, verbose=False)
             try:
                 rep.simplify()
-            except: pass
+            except:
+                enablePrint()
+                print('simplify failed')
+                blockPrint()
             rep = Representation(rep)
             knots = rep.identify()
 
@@ -89,7 +96,9 @@ if __name__ == "__main__":
                         num = int(s.split('+')[0])
                     simpgc.append(num)
             except:
+                enablePrint()
                 print('Failed to convert to Gauss code')
+                blockPrint()
                 continue
 
             sageknot = Knots().from_gauss_code(simpgc)
