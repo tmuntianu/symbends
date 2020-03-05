@@ -20,12 +20,12 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 if __name__ == "__main__":
-    symmetry_class = sys.argv[1]
+    symmetry_class = 'gamma'
     try:
-        walks_to_gen = int(sys.argv[2])
+        walks_to_gen = int(sys.argv[1])
     except:
         walks_to_gen = 100
-    # allwalks = gen_random_walks(samples=walks_to_gen)
+
     data = dict()
     datadir = os.path.join(os.getcwd(),'data',symmetry_class)
 
@@ -34,25 +34,17 @@ if __name__ == "__main__":
 
     for j in range(walks_to_gen):
         w1 = gen_random_walk()
-        w2 = None
-        if symmetry_class == 'alpha':
-            alpha_or_gamma = True
-            w2 = gen_ab(w1)
-        elif symmetry_class == 'beta':
-            alpha_or_gamma = False
-            w2 = gen_ab(w1)
-        else:
-            alpha_or_gamma = True
-            w2 = gen_gamma(w1)
+        alpha_or_gamma = True
+        w2 = gen_gamma(w1)
 
         walks = [w1, w2]
         ints1 = find_intersections(walks)
         ints2 = find_intersections(reversed(walks))
         ints = create_intersection_pairings(ints1, ints2, alpha_or_gamma=alpha_or_gamma)
+        enablePrint()
+        print(ints)
+        blockPrint()
 
-        if (symmetry_class == 'gamma' and ints is not None):
-            print(ints)
-        
         if ints is None:
             continue
         print('ints not none')
@@ -113,7 +105,7 @@ if __name__ == "__main__":
                 "w2": w2,
                 "ints": i
             }
-            
+
             data[knots[0].identifier] = infodict
 
             enablePrint()
