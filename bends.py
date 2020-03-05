@@ -2,6 +2,7 @@ from walks import plot_pivot, pivot, plot_dimer, is_saw
 import matplotlib.pyplot as plt
 import numpy as np
 import itertools
+from collections import OrderedDict
 
 def plot_walk(walks,title='Walk'):
     plt.figure(figsize = (8, 8))
@@ -132,7 +133,7 @@ def gen_random_walk():
             return add_midpoints(walk)
     return gen_random_walk()
 
-# returns a list of 
+# returns a list of
 def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
     if validate_intersections([w1_ints, w2_ints]):
         return None
@@ -153,20 +154,53 @@ def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
         all_intersections.append(one_intersection)
     return all_intersections
 
+def create_dt(w1, w2, ints):
+    w1 = list(zip(w1[0],w1[1]))
+    w2 = list(zip(w2[0],w2[1]))
+    labels = OrderedDict()
+    label = 1
+    for p in w1:
+        if p in ints:
+            if not p in labels:
+                labels[p] = [label]
+            else:
+                labels[p].append(label)
+            label += 1
+
+    for p in w2:
+        if p in ints:
+            if not p in labels:
+                labels[p] = [label]
+            else:
+                labels[p].append(label)
+            label += 1
+
+    dt = []
+    for i, l in enumerate(labels.keys()):
+        if i % 2 == 1:
+            num = 0
+            if labels[l][0] % 2 == 0:
+                num = labels[l][0]
+            else:
+                num = labels[l][1]
+            if ints[l] is True:
+                num *= -1
+            dt.append(num)
+
+    return dt
+
 
 if __name__ == "__main__":
     walk = gen_random_walk()
-
     a_walk = gen_ab(walk)
     g_walk = gen_gamma(walk)
     walks_ab = [walk, a_walk]
     ints_1 = find_intersections(walks_ab)
     ints_2 = find_intersections(reversed(walks_ab))
-    print(create_intersection_pairings(ints_1, ints_2, False))
-    print('start a', (walks_ab[0][0][0], walks_ab[0][1][0]), 'start b', (walks_ab[1][0][0], walks_ab[1][1][0]))
-    # plot_walk(walks_ab)
-    # walks_g = [walk, g_walk]
-    # find_intersections(walks_g)
-    # print(find_intersections(reversed(walks_g)))
-    plot_walk(walks_ab,'alpha, beta')
-    plot_walk([walk, g_walk],'gamma')
+    ints = create_intersection_pairings(ints_1, ints_2, alpha_or_gamma=False)
+    dt = create_dt(walk, a_walk, ints[0])
+    print(dt)
+    # print(create_intersection_pairings(ints_1, ints_2, alpha_or_gamma=False))
+    # print('start a', (walks_ab[0][0][0], walks_ab[0][1][0]), 'start b', (walks_ab[1][0][0], walks_ab[1][1][0]))
+    # plot_walk(walks_ab,'alpha, beta')
+    # plot_walk([walk, g_walk],'gamma')
