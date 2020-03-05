@@ -20,9 +20,13 @@ def enablePrint():
     sys.stdout = sys.__stdout__
 
 if __name__ == "__main__":
-    walks = gen_random_walks(samples=100)
-    print("Number of generated walks: " + str(len(walks)))
     symmetry_class = sys.argv[1]
+    try:
+        walks_to_gen = str(sys.argv[2])
+    except:
+        walks_to_gen = 100
+    walks = gen_random_walks(samples=walks_to_gen)
+    print("Number of generated walks: " + str(len(walks)))
     data = dict()
     datadir = os.path.join(os.getcwd(),'data',symmetry_class)
 
