@@ -43,7 +43,7 @@ if __name__ == "__main__":
         ints = create_intersection_pairings(ints1, ints2, alpha_or_gamma=alpha_or_gamma)
         enablePrint()
         # print(ints)
-        blockPrint()
+        # blockPrint()
 
         if ints is None:
             continue
