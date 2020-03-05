@@ -120,7 +120,7 @@ test_walk = np.array([[ 0,  0,  0,  1,  1,  1,  1,  0, -1, -1, -1, -2, -2, -2, -
         -1, -2, -3, -3]])
 
 def gen_random_walk():
-    potential_walks = pivot(100, 200, 'dimer', 12)
+    potential_walks = pivot(50, 25, 'dimer', 15)
 
     for w in potential_walks:
         walk = np.array(w)
@@ -234,7 +234,7 @@ if __name__ == "__main__":
         ints_1 = find_intersections(walks_g)
         ints_2 = find_intersections(reversed(walks_g))
         ints = create_intersection_pairings(ints_1, ints_2, True)
-    print(ints)
+    # print(ints)
     print(ints_1)
     print(ints_2)
     print(len(ints[0]))

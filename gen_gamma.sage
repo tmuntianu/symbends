@@ -25,15 +25,15 @@ if __name__ == "__main__":
         walks_to_gen = int(sys.argv[2])
     except:
         walks_to_gen = 100
-    allwalks = gen_random_walks(samples=walks_to_gen)
-    print("Number of generated walks: " + str(len(allwalks)))
+    # allwalks = gen_random_walks(samples=walks_to_gen)
     data = dict()
     datadir = os.path.join(os.getcwd(),'data',symmetry_class)
 
     knots_generated = 0
     blockPrint()
 
-    for w1 in allwalks:
+    for j in range(walks_to_gen):
+        w1 = gen_random_walk()
         w2 = None
         if symmetry_class == 'alpha':
             alpha_or_gamma = True
