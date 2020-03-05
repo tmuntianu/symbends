@@ -136,4 +136,4 @@ if __name__ == "__main__":
     f = open(os.path.join(datadir, 'datadict'), 'wb')
     dump(data, f)
     f.close()
-    print(data)
+    # print(data)
