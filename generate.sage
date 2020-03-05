@@ -7,7 +7,7 @@ from bends import plot_walk
 import numpy as np
 from sage.knots.knot import Knots
 import sys, os, warnings
-from pickle import dump
+from pickle import dump, load
 
 warnings.filterwarnings("ignore")
 
@@ -30,6 +30,7 @@ if __name__ == "__main__":
     data = dict()
     datadir = os.path.join(os.getcwd(),'data',symmetry_class)
 
+    knots_generated = 0
     blockPrint()
 
     for w1 in walks:
@@ -104,9 +105,23 @@ if __name__ == "__main__":
                 data[knots[0].identifier] = [infodict]
             else:
                 data[knots[0].identifier].append(infodict)
+            
+            enablePrint()
+            knots_generated += 1
+            print('Successfully generated knot #' + str(knots_generated))
+            blockPrint()
     
     # pickle dict
     enablePrint()
+    prevdict = None
+    try:
+        f = open(os.path.join(datadir, 'datadict'), 'rb')
+        prevdict = load(f)
+        f.close()
+    except: pass
+    if prevdict is not None:
+        data.update(prevdict)
+        
     f = open(os.path.join(datadir, 'datadict'), 'wb')
     dump(data, f)
     f.close()
