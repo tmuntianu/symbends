@@ -82,6 +82,9 @@ if __name__ == "__main__":
             rep = Representation(rep)
             knots = rep.identify()
 
+            if len(knots) == 0:
+                continue 
+            
             if knots[0].identifier in data:
                 continue
 
