@@ -1,0 +1,109 @@
+from bends import gen_random_walks, find_intersections, \
+gen_ab, gen_gamma, create_dt, create_intersection_pairings, gen_random_walk
+from pyknotid.representations.dtnotation import DTNotation
+from pyknotid.representations.gausscode import GaussCode
+from pyknotid.representations.representation import Representation
+from bends import plot_walk
+import numpy as np
+from sage.knots.knot import Knots
+import sys, os, warnings
+from pickle import dump
+
+warnings.filterwarnings("ignore")
+
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
+if __name__ == "__main__":
+    walks = gen_random_walks(samples=100)
+    print("Number of generated walks: " + str(len(walks)))
+    symmetry_class = sys.argv[1]
+    data = dict()
+    datadir = os.path.join(os.getcwd(),'data',symmetry_class)
+
+    blockPrint()
+
+    for w1 in walks:
+        if symmetry_class == 'alpha':
+            alpha_or_gamma = True
+            w2 = gen_ab(w1)
+        elif symmetry_class == 'beta':
+            alpha_or_gamma = False
+            w2 = gen_ab(w1)
+        elif symmetry_class == 'gamma':
+            alpha_or_gamma = True
+            w2 = gen_gamma(w1)
+        
+        walks = [w1, w2]
+        ints1 = find_intersections(walks)
+        ints2 = find_intersections(reversed(walks))
+        ints = create_intersection_pairings(ints1, ints2, alpha_or_gamma=alpha_or_gamma)
+
+        for i in ints:
+            try:
+                dt_code = create_dt(ints2, ints1, i)
+            except:
+                continue
+            try:
+                gc = Knots().from_dowker_code(dt_code).gauss_code()[0]
+            except:
+                continue
+            gc_py = ''
+            for i in gc:
+                gc_py += str(abs(i))
+                if np.sign(i) == 1:
+                    gc_py += '+'
+                else:
+                    gc_py += '-'
+                gc_py += ','
+            gc_py = GaussCode.calculating_orientations(gc_py[:-1])
+            
+            rep = GaussCode(gc_py, verbose=False)
+            try:
+                rep.simplify()
+            except: pass
+            rep = Representation(rep)
+            knots = rep.identify()
+
+            simpgc = []
+            gcstr = str(rep)
+            try:    
+                for s in gcstr.split(','):
+                    if '-' in s:
+                        num = int(s.split('-')[0]) * -1
+                    else:
+                        num = int(s.split('+')[0])
+                    simpgc.append(num)
+            except:
+                print('Failed to convert to Gauss code') 
+                continue
+
+            sageknot = Knots().from_gauss_code(simpgc)
+            outplot = os.path.join(datadir, knots[0].identifier + '.png')
+            print(outplot)
+            plot(sageknot).save(outplot)
+
+            infodict = {
+                "plot": outplot,
+                "gc": simpgc,
+                "dt": dt_code,
+                "w1": w1,
+                "w2": w2,
+                "ints": i
+            }
+            if not knots[0].identifier in data:
+                data[knots[0].identifier] = [infodict]
+            else:
+                data[knots[0].identifier].append(infodict)
+    
+    # pickle dict
+    enablePrint()
+    f = open(os.path.join(datadir, 'datadict'), 'wb')
+    dump(data, f)
+    f.close()
+    print(data)

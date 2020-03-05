@@ -120,7 +120,7 @@ test_walk = np.array([[ 0,  0,  0,  1,  1,  1,  1,  0, -1, -1, -1, -2, -2, -2, -
         -1, -2, -3, -3]])
 
 def gen_random_walk():
-    potential_walks = pivot(35, 20, 'dimer', 7)
+    potential_walks = pivot(100, 200, 'dimer', 12)
 
     for w in potential_walks:
         walk = np.array(w)
@@ -133,17 +133,31 @@ def gen_random_walk():
             return add_midpoints(walk)
     return gen_random_walk()
 
+def gen_random_walks(length=50, samples=20000, method='dimer', tolerance=15):
+    potential_walks = pivot(length, samples, method, tolerance)
+    walks = []
+    for w in potential_walks:
+        walk = np.array(w)
+        try:
+            walk = centrify(de_palindrome(walk))
+        except: pass
+        if (validity_check(walk)):
+            walks.append(add_midpoints(walk))
+    return walks
+
 # returns a list of
 def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
     if validate_intersections([w1_ints, w2_ints]):
         return None
     # we know from validate_intersections w1, w2 ints must be even
     n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)//2))]
+    # n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)))]
     # generate all possible combinations
     # now we add to the list of maps based on the bitstrings
     all_intersections = []
     for bitstring in n_bitstrings:
         one_intersection = dict()
+        bitstring = bitstring
         for idx, bit in enumerate(bitstring):
             # NOT SURE IF THESE ARE THE CORRECT PAIRINGS
             one_intersection[w1_ints[idx]] = bit == '0'
@@ -155,34 +169,56 @@ def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
     return all_intersections
 
 def create_dt(w1, w2, ints):
-    w1 = list(zip(w1[0],w1[1]))
-    w2 = list(zip(w2[0],w2[1]))
+    # w1 = list(zip(w1[0],w1[1]))
+    # w2 = list(zip(w2[0],w2[1]))
+    
+    # keys = set(ints.keys())
+    # for k in keys:
+    #     ints[ints[k]] = k
+    ints['c1'] = True
+    ints['c2'] = False
     labels = OrderedDict()
     label = 1
     for p in w1:
-        if p in ints:
-            if not p in labels:
-                labels[p] = [label]
-            else:
-                labels[p].append(label)
-            label += 1
+        labels[p] = [label]
+        label += 1
+    
+    labels['c1'] = [label]
+    label += 1
+    # labels['c2'] = [label]
+    # label += 1
 
-    for p in w2:
-        if p in ints:
-            if not p in labels:
-                labels[p] = [label]
-            else:
-                labels[p].append(label)
-            label += 1
+    for p in reversed(w2):
+        labels[p].append(label)
+        label += 1
+    
+    labels['c1'].append(label)
+    # label += 1
+    # labels['c2'].append(label)
 
     dt = []
+    for i, l in enumerate(labels.keys()):
+        if i % 2 == 0:
+            num = 0
+            if labels[l][0] % 2 == 0:
+                num = labels[l][0]
+            elif labels[l][1] % 2 == 0:
+                num = labels[l][1]
+            else:
+                raise ValueError("Need an even label at each crossing")
+            if ints[l] is True:
+                num *= -1
+            dt.append(num)
+
     for i, l in enumerate(labels.keys()):
         if i % 2 == 1:
             num = 0
             if labels[l][0] % 2 == 0:
                 num = labels[l][0]
-            else:
+            elif labels[l][1] % 2 == 0:
                 num = labels[l][1]
+            else:
+                raise ValueError("Need an even label at each crossing")
             if ints[l] is True:
                 num *= -1
             dt.append(num)
