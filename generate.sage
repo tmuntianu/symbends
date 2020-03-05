@@ -43,12 +43,15 @@ if __name__ == "__main__":
         elif symmetry_class == 'gamma':
             alpha_or_gamma = True
             w2 = gen_gamma(w1)
-        
+
         walks = [w1, w2]
         ints1 = find_intersections(walks)
         ints2 = find_intersections(reversed(walks))
         ints = create_intersection_pairings(ints1, ints2, alpha_or_gamma=alpha_or_gamma)
-
+        
+        if ints is None:
+            continue
+        
         for i in ints:
             try:
                 dt_code = create_dt(ints2, ints1, i)
@@ -67,7 +70,7 @@ if __name__ == "__main__":
                     gc_py += '-'
                 gc_py += ','
             gc_py = GaussCode.calculating_orientations(gc_py[:-1])
-            
+
             rep = GaussCode(gc_py, verbose=False)
             try:
                 rep.simplify()
@@ -77,7 +80,7 @@ if __name__ == "__main__":
 
             simpgc = []
             gcstr = str(rep)
-            try:    
+            try:
                 for s in gcstr.split(','):
                     if '-' in s:
                         num = int(s.split('-')[0]) * -1
@@ -85,7 +88,7 @@ if __name__ == "__main__":
                         num = int(s.split('+')[0])
                     simpgc.append(num)
             except:
-                print('Failed to convert to Gauss code') 
+                print('Failed to convert to Gauss code')
                 continue
 
             sageknot = Knots().from_gauss_code(simpgc)
@@ -105,12 +108,12 @@ if __name__ == "__main__":
                 data[knots[0].identifier] = [infodict]
             else:
                 data[knots[0].identifier].append(infodict)
-            
+
             enablePrint()
             knots_generated += 1
             print('Successfully generated knot #' + str(knots_generated))
             blockPrint()
-    
+
     # pickle dict
     enablePrint()
     prevdict = None

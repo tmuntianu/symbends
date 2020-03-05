@@ -157,7 +157,6 @@ def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
     all_intersections = []
     for bitstring in n_bitstrings:
         one_intersection = dict()
-        bitstring = bitstring
         for idx, bit in enumerate(bitstring):
             # NOT SURE IF THESE ARE THE CORRECT PAIRINGS
             one_intersection[w1_ints[idx]] = bit == '0'
