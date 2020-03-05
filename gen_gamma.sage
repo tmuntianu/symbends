@@ -49,13 +49,13 @@ if __name__ == "__main__":
             continue
         print('ints not none')
         for i in ints:
-            try:
-                dt_code = create_dt(ints2, ints1, i)
-            except:
-                enablePrint()
-                print('dt code failed')
-                blockPrint()
-                continue
+            # try:
+            dt_code = create_dt(ints2, ints1, i)
+            # except:
+            #     enablePrint()
+            #     print('dt code failed')
+            #     blockPrint()
+            #     continue
             try:
                 gc = Knots().from_dowker_code(dt_code).gauss_code()[0]
             except:
