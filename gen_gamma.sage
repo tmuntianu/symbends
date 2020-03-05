@@ -60,6 +60,7 @@ if __name__ == "__main__":
                 gc = Knots().from_dowker_code(dt_code).gauss_code()[0]
             except:
                 enablePrint()
+                print(dt_code)
                 print('knot gen failed')
                 blockPrint()
                 continue
