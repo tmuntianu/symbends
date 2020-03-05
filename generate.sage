@@ -22,7 +22,7 @@ def enablePrint():
 if __name__ == "__main__":
     symmetry_class = sys.argv[1]
     try:
-        walks_to_gen = str(sys.argv[2])
+        walks_to_gen = int(sys.argv[2])
     except:
         walks_to_gen = 100
     walks = gen_random_walks(samples=walks_to_gen)
@@ -121,7 +121,7 @@ if __name__ == "__main__":
     except: pass
     if prevdict is not None:
         data.update(prevdict)
-        
+
     f = open(os.path.join(datadir, 'datadict'), 'wb')
     dump(data, f)
     f.close()
