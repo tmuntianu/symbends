@@ -150,8 +150,7 @@ def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
     if validate_intersections([w1_ints, w2_ints]):
         return None
     # we know from validate_intersections w1, w2 ints must be even
-    n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)//2))]
-    # n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)))]
+    n_bitstrings = ["".join(seq) for seq in itertools.product("01", repeat=(len(w1_ints)))]
     # generate all possible combinations
     # now we add to the list of maps based on the bitstrings
     all_intersections = []
@@ -226,16 +225,28 @@ def create_dt(w1, w2, ints):
 
 
 if __name__ == "__main__":
-    walk = gen_random_walk()
-    a_walk = gen_ab(walk)
-    g_walk = gen_gamma(walk)
-    walks_ab = [walk, a_walk]
-    ints_1 = find_intersections(walks_ab)
-    ints_2 = find_intersections(reversed(walks_ab))
-    ints = create_intersection_pairings(ints_1, ints_2, alpha_or_gamma=False)
-    dt = create_dt(walk, a_walk, ints[0])
-    print(dt)
+    ints = None
+    while not ints:
+        walk = gen_random_walk()
+        a_walk = gen_ab(walk)
+        g_walk = gen_gamma(walk)
+        walks_g = [walk, g_walk]
+        ints_1 = find_intersections(walks_g)
+        ints_2 = find_intersections(reversed(walks_g))
+        ints = create_intersection_pairings(ints_1, ints_2, True)
+    print(ints)
+    print(ints_1)
+    print(ints_2)
+    print(len(ints[0]))
+
+
+    # walks_ab = [walk, a_walk]
+    # ints_1 = find_intersections(walks_ab)
+    # ints_2 = find_intersections(reversed(walks_ab))
+    # ints = create_intersection_pairings(ints_1, ints_2, alpha_or_gamma=False)
+    # dt = create_dt(walk, a_walk, ints[0])
+    # print(dt)
     # print(create_intersection_pairings(ints_1, ints_2, alpha_or_gamma=False))
     # print('start a', (walks_ab[0][0][0], walks_ab[0][1][0]), 'start b', (walks_ab[1][0][0], walks_ab[1][1][0]))
     # plot_walk(walks_ab,'alpha, beta')
-    # plot_walk([walk, g_walk],'gamma')
+    plot_walk([walk, g_walk],'gamma')
