@@ -42,7 +42,7 @@ if __name__ == "__main__":
         ints2 = find_intersections(reversed(walks))
         ints = create_intersection_pairings(ints1, ints2, alpha_or_gamma=alpha_or_gamma)
         enablePrint()
-        print(ints)
+        # print(ints)
         blockPrint()
 
         if ints is None:
