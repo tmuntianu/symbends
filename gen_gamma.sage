@@ -60,10 +60,12 @@ if __name__ == "__main__":
             try:
                 dt_code = create_dt(ints2, ints1, i)
             except:
+                print('dt code failed')
                 continue
             try:
                 gc = Knots().from_dowker_code(dt_code).gauss_code()[0]
             except:
+                print('knot gen failed')
                 continue
             gc_py = ''
             for i in gc:
