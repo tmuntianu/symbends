@@ -180,9 +180,9 @@ def create_dt(w1, w2, ints):
     for p in w1:
         labels[p] = [label]
         label += 1
-    
-    labels['c1'] = [label]
-    label += 1
+
+    # labels['c1'] = [label]
+    # label += 1
     # labels['c2'] = [label]
     # label += 1
 
@@ -190,7 +190,7 @@ def create_dt(w1, w2, ints):
         labels[p].append(label)
         label += 1
     
-    labels['c1'].append(label)
+    # labels['c1'].append(label)
     # label += 1
     # labels['c2'].append(label)
 
