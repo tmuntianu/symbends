@@ -12,11 +12,11 @@ def plot_walk(walks,title='Walk'):
             x, y = walk
             plt.plot(x, y, c[i%len(c)] + '.-', linewidth = 1)
     else:
-        x, y = walk
+        x, y = walks
         plt.plot(x, y, 'b.-', linewidth = 1)
     plt.axis('equal')
     plt.title(title, fontsize=14, fontweight='bold', y = 1.05)
-    plt.show()
+    # plt.show()
 
 def de_palindrome(walk):
     coords = list(zip(walk[0],walk[1]))
@@ -169,7 +169,7 @@ def create_intersection_pairings(w1_ints, w2_ints, alpha_or_gamma=True):
 def create_dt(w1, w2, ints):
     # w1 = list(zip(w1[0],w1[1]))
     # w2 = list(zip(w2[0],w2[1]))
-    
+
     # keys = set(ints.keys())
     # for k in keys:
     #     ints[ints[k]] = k
@@ -189,7 +189,7 @@ def create_dt(w1, w2, ints):
     for p in reversed(w2):
         labels[p].append(label)
         label += 1
-    
+
     # labels['c1'].append(label)
     # label += 1
     # labels['c2'].append(label)
